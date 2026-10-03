@@ -1,0 +1,20 @@
+# Python 3.11, CUDA 12.1. torch and torch-scatter wheels are not on PyPI:
+#   pip install -r requirements.txt \
+#       --extra-index-url https://download.pytorch.org/whl/cu121 \
+#       -f https://data.pyg.org/whl/torch-2.5.1+cu121.html
+# requirements-frozen.txt pins the exact environment.
+torch==2.5.1
+torch-scatter==2.1.2
+torch-geometric==2.4.0
+triton==3.1.0
+numpy<2
+scipy
+tqdm
+ninja
+easydict
+pyyaml
+jinja2
+# graph-walker (Flock's random-walk extension, built from ./graph-walker)
+pybind11
+networkx
+scikit-learn
