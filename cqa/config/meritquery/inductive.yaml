@@ -1,0 +1,55 @@
+output_dir: output/
+
+dataset:
+  class: {{ dataset }}
+  root: cqa/benchmarks/
+  version: {{ version }}
+
+model:
+  class: MeritQuery
+  model:
+    relation_model:
+      class: RelTransformerMERIT
+      input_dim: 64
+      hidden_dims: [64, 64, 64, 64, 64, 64]
+      num_heads: 8
+      ff_dim: 256
+      dropout: 0.0
+      rni: yes
+      num_channels: 4
+      attn_impl: flex
+      role_features: max,logdeg
+      role_dim: 8
+    entity_model:
+      input_dim: 64
+      hidden_dims: [64, 64, 64, 64, 64, 64]
+      message_func: distmult
+      aggregate_func: sum
+      short_cut: yes
+      layer_norm: yes
+  logic: product
+  dropout_ratio: 0.5
+  threshold: 0.0
+  more_dropout: 0.0
+
+task:
+  name: InductiveInference
+  strict_negative: yes
+  adversarial_temperature: 0.2
+  sample_weight: no
+  metric: [mrr, hits@1, hits@3, hits@10, auroc, spearmanr]
+
+optimizer:
+  class: Adam
+  lr: 5.0e-4
+
+train:
+  gpus: {{ gpus }}
+  batch_size: {{ bs }}
+  num_epoch: {{ epochs }}
+  batch_per_epoch: {{ bpe }}
+  log_interval: 100
+  fast_test: 1000
+
+backbone_ckpt: null
+query_ckpt: {{ ckpt }}

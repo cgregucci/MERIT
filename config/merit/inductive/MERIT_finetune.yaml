@@ -1,0 +1,49 @@
+output_dir: output/
+
+dataset:
+  class: {{ dataset }}
+  version: {{ version }}
+  root: kg-datasets/
+
+model:
+  class: MERIT
+  relation_model:
+    class: RelTransformerMERIT
+    input_dim: 64
+    hidden_dims: [64, 64, 64, 64, 64, 64]
+    num_heads: 8
+    ff_dim: 256
+    dropout: 0.0
+    rni: yes
+    num_channels: 4
+    attn_impl: flex
+    role_features: max,logdeg
+    role_dim: 8
+  entity_model:
+    class: IndNBFNet
+    input_dim: 64
+    hidden_dims: [64, 64, 64, 64, 64, 64]
+    message_func: distmult
+    aggregate_func: sum
+    short_cut: yes
+    layer_norm: yes
+
+task:
+  name: InductiveInference
+  num_negative: 256
+  strict_negative: yes
+  adversarial_temperature: 1
+  metric: [mr, mrr, hits@1, hits@3, hits@10, hits@10_50]
+
+optimizer:
+  class: AdamW
+  lr: 5.0e-4
+
+train:
+  gpus: {{ gpus }}
+  batch_size: 32
+  num_epoch: {{ epochs }}
+  log_interval: 100
+  batch_per_epoch: {{ bpe }}
+
+checkpoint: {{ ckpt }}
